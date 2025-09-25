@@ -1,6 +1,12 @@
-resource "mongodbatlas_cluster" "atlas_cluster" {
-  project_id                  = var.atlas_project_id
-  name                        = var.name
+resource "mongodbatlas_project" "project" {
+  org_id = var.atlas_organization_id
+  name   = var.atlas_project_name
+  tags   = var.tags
+}
+
+resource "mongodbatlas_cluster" "cluster" {
+  project_id                  = mongodbatlas_project.project.id
+  name                        = var.cluster_name
   cluster_type                = "REPLICASET"
   provider_name               = "TENANT"
   backing_provider_name       = var.backing_provider_name

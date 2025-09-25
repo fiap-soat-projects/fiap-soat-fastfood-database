@@ -3,7 +3,7 @@ variable "atlas_project_id" {
   type        = string
 }
 
-variable "ip_address" {
-  description = "The IP address or CIDR block to be added to the IP access list."
-  type        = string
+variable "allowed_ips" {
+  description = "List of IP addresses allowed to access the cluster."
+  type        = list(string)
 }
