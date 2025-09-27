@@ -48,7 +48,7 @@ jobs:
 
   terraform_apply:
     if: github.ref == 'refs/heads/main'
-    needs: plan
+    needs: terraform_plan
     runs-on: ubuntu-latest
     environment: prd
     steps:
