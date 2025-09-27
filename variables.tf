@@ -3,6 +3,22 @@ variable "subscription_id" {
   type        = string
 }
 
+variable "client_id" {
+  description = "Azure AppID"
+  type = string
+}
+
+variable "client_secret" {
+  description = "Azure App Secret"
+  type = string
+  sensitive = true
+}
+
+variable "tenant_id" {
+  description = "Azure TenantID"
+  type = string
+}
+
 variable "atlas_public_key" {
   description = "Public key for MongoDB Atlas"
   type        = string
