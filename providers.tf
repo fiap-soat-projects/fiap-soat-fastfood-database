@@ -24,7 +24,6 @@ provider "mongodbatlas" {
 }
 
 provider "azurerm" {
-  use_azure_cli_auth = false
   resource_provider_registrations = "none"
   client_id                       = var.client_id
   client_secret                   = var.client_secret
