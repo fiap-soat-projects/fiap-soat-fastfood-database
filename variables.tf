@@ -25,13 +25,11 @@ variable "tenant_id" {
 variable "atlas_public_key" {
   description = "Public key for MongoDB Atlas"
   type        = string
-  sensitive   = true
 }
 
 variable "atlas_private_key" {
   description = "Private key for MongoDB Atlas"
   type        = string
-  sensitive   = true
 }
 
 variable "atlas_organization_id" {
@@ -47,7 +45,6 @@ variable "mongodb_database_users" {
     role_name     = string
     database_name = string
   }))
-  sensitive = true
 }
 
 variable "allowed_ips" {
