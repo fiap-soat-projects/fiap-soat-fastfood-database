@@ -1,11 +1,13 @@
 variable "subscription_id" {
   description = "Azure Subscription ID"
   type        = string
+  sensitive = true
 }
 
 variable "client_id" {
   description = "Azure AppID"
   type = string
+  sensitive = true
 }
 
 variable "client_secret" {
@@ -17,16 +19,19 @@ variable "client_secret" {
 variable "tenant_id" {
   description = "Azure TenantID"
   type = string
+  sensitive = true
 }
 
 variable "atlas_public_key" {
   description = "Public key for MongoDB Atlas"
   type        = string
+  sensitive = true
 }
 
 variable "atlas_private_key" {
   description = "Private key for MongoDB Atlas"
   type        = string
+  sensitive = true
 }
 
 variable "atlas_organization_id" {
@@ -42,6 +47,7 @@ variable "mongodb_database_users" {
     role_name     = string
     database_name = string
   }))
+  sensitive = true
 }
 
 variable "allowed_ips" {
