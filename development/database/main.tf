@@ -12,17 +12,17 @@ module "users" {
   database_users = var.mongodb_database_users
 }
 
-module "ip_access" {
+module "allowed_ips" {
   source           = "../../modules/ip_access"
   atlas_project_id = module.cluster.project_id
-  allowed_ips      = var.allowed_ips
+  allowed_ips      = concat(var.allowed_ips, [local.executor_ip])
 }
 
 module "executor" {
   depends_on = [
     module.cluster,
     module.users,
-    module.ip_access
+    module.allowed_ips
   ]
 
   source        = "../../modules/executor"
