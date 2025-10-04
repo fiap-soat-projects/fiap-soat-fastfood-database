@@ -12,5 +12,5 @@ resource "mongodbatlas_cluster" "cluster" {
   backing_provider_name       = var.backing_provider_name
   provider_region_name        = var.provider_region_name
   provider_instance_size_name = "M0"
-  mongo_db_major_version      = "7.0"
+  mongo_db_major_version      = "8.0"
 }

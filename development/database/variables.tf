@@ -38,7 +38,7 @@ variable "atlas_organization_id" {
 }
 
 variable "mongodb_database_users" {
-  description = "List of database users to create."
+  description = "List of database users to create"
   type = map(object({
     username      = string
     password      = string
@@ -48,6 +48,7 @@ variable "mongodb_database_users" {
 }
 
 variable "allowed_ips" {
-  description = "List of IP addresses allowed to access the cluster."
+  description = "List of IP addresses allowed to access the cluster"
   type        = list(string)
+  default     = []
 }
