@@ -7,9 +7,12 @@ on:
       - main
 
 jobs:
-  terraform_plan:
+  terraform_database:
     runs-on: ubuntu-latest
     environment: prd
+    defaults:
+      run:
+        working-directory: ./production/database
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,46 +22,6 @@ jobs:
         with:
           terraform_version: 1.7.5
 
-      - name: Set Azure SP Environment Variables
-        run: |
-          echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
-          echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-
-      - name: Create tfvars file
-        run: |
-          cat > terraform.tfvars <<'EOF'
-          ${{ secrets.TFVARS_CONTENT }}
-          EOF
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-      - name: Upload Plan
-        if: github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-plan
-          path: ./tfplan
-
-  terraform_apply:
-    if: github.ref == 'refs/heads/main'
-    needs: terraform_plan
-    runs-on: ubuntu-latest
-    environment: prd
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.7.5
-          
       - name: Set Azure SP Environment Variables
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
@@ -72,21 +35,59 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
           sudo apt-get update
           sudo apt-get install -y mongodb-mongosh
-          
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Download Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-plan
-          path: .
 
       - name: Create tfvars file
         run: |
           cat > terraform.tfvars <<'EOF'
-          ${{ secrets.TFVARS_CONTENT }}
+          ${{ secrets.TFVARS_DATABASE_CONTENT }}
           EOF
 
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+      
       - name: Terraform Apply
-        run: terraform apply tfplan
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply
+
+  terraform_k8s_acess:
+    if: github.ref == 'refs/heads/main'
+    needs: terraform_database
+    runs-on: ubuntu-latest
+    environment: prd
+    defaults:
+      run:
+        working-directory: ./production/k8s_access
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+          
+      - name: Set Azure SP Environment Variables
+        run: |
+          echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          
+      - name: Create tfvars file
+        run: |
+          cat > terraform.tfvars <<'EOF'
+          ${{ secrets.TFVARS_K8S_ACCESS_CONTENT }}
+          EOF
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+      
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply
