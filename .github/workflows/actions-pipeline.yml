@@ -51,7 +51,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply
+        run: terraform apply -auto-approve
 
   terraform_k8s_acess:
     needs: terraform_database
@@ -90,4 +90,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply
+        run: terraform apply -auto-approve
