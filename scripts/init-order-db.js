@@ -1,7 +1,6 @@
 const databasename = process.env.MONGO_DB_NAME;
 db = db.getSiblingDB(databasename);
 
-db.customer.createIndex({ cpf: 1 }, { unique: true });
 db.menu.createIndex({ name: 1 }, { unique: true });
 
 const now = new Date();
