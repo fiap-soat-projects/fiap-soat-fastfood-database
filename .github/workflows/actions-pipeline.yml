@@ -12,7 +12,7 @@ jobs:
     environment: prd
     defaults:
       run:
-        working-directory: ./production/database
+        working-directory: ./environments/production/database
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
     environment: prd
     defaults:
       run:
-        working-directory: ./production/k8s_access
+        working-directory: ./environments/production/k8s_access
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,6 +80,45 @@ jobs:
         run: |
           cat > terraform.tfvars <<'EOF'
           ${{ secrets.TFVARS_K8S_ACCESS_CONTENT }}
+          EOF
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+
+  terraform_postgres:
+    needs: terraform_database
+    runs-on: ubuntu-latest
+    environment: prd
+    defaults:
+      run:
+        working-directory: ./environments/production/postgres
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Set Azure SP Environment Variables
+        run: |
+          echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+
+      - name: Create tfvars file
+        run: |
+          cat > terraform.tfvars <<'EOF'
+          ${{ secrets.TFVARS_POSTGRES_CONTENT }}
           EOF
 
       - name: Terraform Init
