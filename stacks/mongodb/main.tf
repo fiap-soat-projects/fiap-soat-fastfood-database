@@ -1,8 +1,8 @@
 module "cluster" {
   source                = "../../modules/cluster"
   atlas_organization_id = var.atlas_organization_id
-  atlas_project_name    = local.atlas_project_name
-  cluster_name          = local.atlas_cluster_name
+  atlas_project_name    = var.atlas_project_name
+  cluster_name          = var.atlas_cluster_name
   tags                  = { fiap = "soat-postech" }
 }
 

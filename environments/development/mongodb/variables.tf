@@ -37,6 +37,18 @@ variable "atlas_organization_id" {
   type        = string
 }
 
+variable "atlas_project_name" {
+  description = "Project name for MongoDB Atlas"
+  type        = string
+  default     = "fastfood-project-dev"
+}
+
+variable "atlas_cluster_name" {
+  description = "Cluster name for MongoDB Atlas"
+  type        = string
+  default     = "fastfood-cluster-dev"
+}
+
 variable "mongodb_database_users" {
   description = "List of database users to create"
   type = map(object({
