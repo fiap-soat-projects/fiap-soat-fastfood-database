@@ -4,17 +4,27 @@ terraform {
       source  = "mongodb/mongodbatlas"
       version = "2.0.0"
     }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "4.45.1"
+    }
   }
 
   backend "azurerm" {
     resource_group_name  = "rg-terraform-dev"
     storage_account_name = "safiapsoatterraformdev"
     container_name       = "tfstate"
-    key                  = "database/terraform.tfstate"
+    key                  = "database/mongodb/terraform.tfstate"
   }
 }
 
 provider "mongodbatlas" {
   public_key  = var.atlas_public_key
   private_key = var.atlas_private_key
+}
+
+provider "azurerm" {
+  resource_provider_registrations = "none"
+  subscription_id                 = var.subscription_id
+  features {}
 }
