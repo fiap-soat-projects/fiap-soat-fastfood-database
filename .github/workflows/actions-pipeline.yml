@@ -12,7 +12,7 @@ jobs:
     environment: prd
     defaults:
       run:
-        working-directory: ./environments/production/database
+        working-directory: ./environments/production/mongodb
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
     environment: prd
     defaults:
       run:
-        working-directory: ./environments/production/k8s_access
+        working-directory: ./environments/production/mongodb_access
     steps:
       - name: Checkout
         uses: actions/checkout@v4
