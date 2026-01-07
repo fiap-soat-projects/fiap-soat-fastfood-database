@@ -4,7 +4,7 @@ data "terraform_remote_state" "atlas_database" {
     resource_group_name  = "rg-terraform-prod"
     storage_account_name = "safiapsoatterraformprod"
     container_name       = "tfstate"
-    key                  = "database/terraform.tfstate"
+    key                  = "database/mongodb/terraform.tfstate"
   }
 }
 
