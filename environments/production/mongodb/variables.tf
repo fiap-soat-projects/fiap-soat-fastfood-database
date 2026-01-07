@@ -32,6 +32,18 @@ variable "atlas_private_key" {
   type        = string
 }
 
+variable "atlas_project_name" {
+  description = "Project name for MongoDB Atlas"
+  type        = string
+  default     = "fastfood-project-prod"
+}
+
+variable "atlas_cluster_name" {
+  description = "Cluster name for MongoDB Atlas"
+  type        = string
+  default     = "fastfood-cluster-prod"
+}
+
 variable "atlas_organization_id" {
   description = "Organization ID for MongoDB Atlas"
   type        = string
